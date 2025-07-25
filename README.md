@@ -5,6 +5,10 @@ A minimalist setup to quickly scaffold an Electron app using Vue 3 and TypeScrip
 
 ---
 
+# Structure overview:
+src/electron
+src/ui
+
 ## 1. 📦 Install
 
 ```bash
