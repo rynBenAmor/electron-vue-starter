@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+
+    // Use ES Module syntax (import/export)
+    "target": "ESNext",
+    "module": "NodeNext",
+
+    // Output compiled JS to this folder
+    "outDir": "../../dist-electron",
+
+    // Prevent casing bugs across OSes
+    "forceConsistentCasingInFileNames": true,
+
+    // Don't type-check dependencies
+    "skipLibCheck": true
+  }
+}

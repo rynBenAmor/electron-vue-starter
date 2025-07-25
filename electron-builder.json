@@ -1,0 +1,18 @@
+{
+  "appId": "com.electron_with_vue.test_project",
+  "files": ["dist-electron", "dist-vue"],
+  "icon": "./favicon.png",
+  
+  "mac": {
+    "target": "dmg"
+  },
+
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
