@@ -1,16 +1,37 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
+  <div class="container">
+
+    <a>
+      <img src="../../favicon.png" class="logo electron" alt="electron logo">
+    </a>
+
+    <h1>+</h1>
 
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
+
   </div>
   <HelloWorld msg="Hello world" />
 </template>
+
+
+<script>
+import HelloWorld from './components/HelloWorld.vue'
+export default {
+
+  name: 'App',
+  components: {
+    HelloWorld
+  },
+
+  mounted() {
+    window.ElectronAPI.TestPreload();
+  }
+
+}
+</script>
+
 
 <style scoped>
 .logo {
@@ -19,10 +40,20 @@ import HelloWorld from './components/HelloWorld.vue'
   will-change: filter;
   transition: filter 300ms;
 }
-.logo:hover {
+
+.logo.electron:hover {
+  cursor: pointer;
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>
