@@ -1,73 +1,69 @@
 // utils.ts
-// utils.ts
-import { app } from 'electron'
-import path from 'path';
-import os from 'os';
+// use netstat -ano | findstr :5123 to find process id
+import { app } from "electron";
+import path from "path";
 
-
-
-export {
-  isDev,
-  getAssetPath,
-  formatBytes,
-  logDev,
-  getPlatformInfo
-}
-
+export { isDev, getAssetPath, logDev, logger };
 
 function isDev(): boolean {
-  //electron native check instead of process.env.NODE_ENV + cross-env
   return !app.isPackaged;
 }
 
-
 function getAssetPath(...paths: string[]): string {
-  //example icon: getAssetPath('assets', 'icon.png')
-  return path.join(app.isPackaged ? process.resourcesPath : process.cwd(), ...paths);
+  return path.join(
+    app.isPackaged ? process.resourcesPath : process.cwd(),
+    ...paths
+  );
 }
 
+type LogLevel = "info" | "warn" | "error" | "success" | "debug";
 
-function formatBytes(bytes: number, decimals = 2): string {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
+const ANSI_CODES = {
+  reset: "\x1b[0m",
+  cyan: "\x1b[36m",
+  yellow: "\x1b[33m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  magenta: "\x1b[35m",
+};
 
-
-type LogLevel = 'info' | 'warn' | 'error' | 'success' | 'debug';
-
-const colorMap: Record<LogLevel, string> = {
-  info: '\x1b[36m',    // Cyan
-  warn: '\x1b[33m',    // Yellow
-  error: '\x1b[31m',   // Red
-  success: '\x1b[32m', // Green
-  debug: '\x1b[35m',   // Magenta
+const logger = {
+  info: (label: string, ...args: any[]) => {
+    console.log(
+      `${ANSI_CODES.cyan}[${label.toUpperCase()}]${ANSI_CODES.reset}`,
+      ...args
+    );
+  },
+  warn: (label: string, ...args: any[]) => {
+    console.log(
+      `${ANSI_CODES.yellow}[${label.toUpperCase()}]${ANSI_CODES.reset}`,
+      ...args
+    );
+  },
+  error: (label: string, ...args: any[]) => {
+    console.log(
+      `${ANSI_CODES.red}[${label.toUpperCase()}]${ANSI_CODES.reset}`,
+      ...args
+    );
+  },
+  success: (label: string, ...args: any[]) => {
+    console.log(
+      `${ANSI_CODES.green}[${label.toUpperCase()}]${ANSI_CODES.reset}`,
+      ...args
+    );
+  },
+  debug: (label: string, ...args: any[]) => {
+    if (isDev()) {
+      console.log(
+        `${ANSI_CODES.magenta}[${label.toUpperCase()}]${ANSI_CODES.reset}`,
+        ...args
+      );
+    }
+  },
 };
 
 function logDev(level: LogLevel, label: string, ...args: any[]): void {
-  //using //ANSI Escape Codes
-  // example logDev('info', 'hello world')  
-
   if (isDev()) {
-    const color = colorMap[level] || '\x1b[0m';
-    const reset = '\x1b[0m';
-    const tag = `${color}[${label.toUpperCase()}]${reset}`;
-    console.log(tag, ...args);
+    logger[level](label, ...args);
   }
 }
-
-
-
-function getPlatformInfo() {
-  return {
-    platform: os.platform(),
-    arch: os.arch(),
-    cpus: os.cpus().length,
-    memory: formatBytes(os.totalmem()),
-    hostname: os.hostname(),
-  };
-}
-
